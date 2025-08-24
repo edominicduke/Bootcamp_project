@@ -1,8 +1,9 @@
+# streamlit_app.py
+
 import pandas as pd
-import requests
 import streamlit as st
 import matplotlib.pyplot as plt
-from datetime import datetime
+from fetchapi import fetch_opensky_snapshot
 
 st.set_page_config(page_title="Flight Volume by Country (OpenSky)", layout="wide")
 st.title("🌍 Global Flight Snapshot (via OpenSky Network)")
@@ -11,37 +12,14 @@ st.caption("Showing a snapshot of the most recent ~1,800 aircraft globally. Data
 
 run = st.button("Fetch Live Flights")
 
-# ---------- API ----------
-OPENSKY_URL = "https://opensky-network.org/api/states/all"
-
-@st.cache_data(show_spinner=False)
-def fetch_opensky_states():
-    r = requests.get(OPENSKY_URL, timeout=20)
-    if r.status_code == 200:
-        return r.json()
-    return None
-
 # ---------- Main ----------
 if run:
     st.info("Fetching live data from OpenSky…")
-    data = fetch_opensky_states()
-
-    if not data or "states" not in data:
-        st.error("Failed to fetch data from OpenSky. Try again later.")
+    try:
+        df = fetch_opensky_snapshot()
+    except Exception as e:
+        st.error(f"Failed to fetch data: {e}")
         st.stop()
-
-    states = data["states"]
-    now = datetime.utcfromtimestamp(data.get("time", datetime.utcnow().timestamp()))
-
-    # Convert to DataFrame
-    cols = [
-        "icao24", "callsign", "origin_country", "time_position", "last_contact",
-        "longitude", "latitude", "baro_altitude", "on_ground", "velocity",
-        "true_track", "vertical_rate", "sensors", "geo_altitude", "squawk",
-        "spi", "position_source"
-    ]
-    df = pd.DataFrame(states, columns=cols)
-    df["last_contact"] = pd.to_datetime(df["last_contact"], unit="s")
 
     st.metric("Flights in snapshot", len(df))
 
