@@ -204,6 +204,55 @@ if run_rdu:
         st.subheader("🏢 Top 10 Airlines from RDU (last 6h)")
         st.bar_chart(top_airlines.set_index("Airline"))
 
+# ============== >>> RDU HOURLY HEATMAP START >>> ==============
+# ---------- RDU Previous-Day Hourly Heatmap (OpenSky) ----------
+st.header("🔥 RDU Hourly Arrivals/Departures — Previous Day")
+
+colA, colB = st.columns([1, 1])
+with colA:
+    # ICAO code; KRDU is Raleigh–Durham
+    airport_icao = st.text_input("Airport ICAO", value=DEFAULT_AIRPORT, help="KRDU = Raleigh–Durham")
+with colB:
+    # Trigger to fetch and render the heatmap
+    go_heatmap = st.button("Generate RDU Heatmap")
+
+if go_heatmap:
+    with st.spinner("Fetching previous-day arrivals & departures from OpenSky..."):
+        # Returns a 24x2 table (arrivals/departures per hour) and the previous local date
+        counts_df, prev_day = hourly_counts_for_previous_day(airport_icao.strip().upper())
+
+    # Show the day and timezone for clarity
+    st.caption(f"Local day: {prev_day.isoformat()} · Timezone: America/New_York")
+
+    # Display the raw hourly table
+    st.dataframe(counts_df, use_container_width=True)
+
+    # Build a 2x24 matrix for heatmap: row0=Arrivals, row1=Departures
+    data = [counts_df['arrivals'].tolist(), counts_df['departures'].tolist()]
+
+    # Draw heatmap using matplotlib (no custom colors per your constraints)
+    fig, ax = plt.subplots(figsize=(12, 2.8))
+    im = ax.imshow(data, aspect="auto")
+
+    # Axis labels and ticks
+    ax.set_yticks([0, 1])
+    ax.set_yticklabels(["Arrivals", "Departures"])
+    ax.set_xticks(range(24))
+    ax.set_xticklabels([str(h) for h in range(24)])
+    ax.set_xlabel("Hour of Day (Local)")
+    ax.set_title(f"{airport_icao.strip().upper()} — Hourly Arrivals/Departures on {prev_day.isoformat()}")
+
+    # Optional: annotate cell counts
+    for r in range(2):
+        for c in range(24):
+            ax.text(c, r, str(data[r][c]), ha="center", va="center", fontsize=8)
+
+    # Colorbar and render
+    fig.colorbar(im, ax=ax, fraction=0.02, pad=0.02)
+    st.pyplot(fig)
+# ============== <<< RDU HOURLY HEATMAP END <<< ==============
+
+
 
 #### ----------- Airline Profile Comparison (AviationAPI - Ethan Dominic's Code) ----------- ####
 airline_data = fetch_aviation_API_airlines_endpoint()
