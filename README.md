@@ -34,10 +34,13 @@ pip install -r requirements.txt
 📂 Project Structure
 
 .
-├── fetchapi.py          # Fetches flight snapshot from OpenSky API
-├── streamlit_app.py     # Streamlit dashboard
-├── requirements.txt     # Python dependencies
-└── README.md            # Project documentation
+├── fetchapi.py           # Fetches flight snapshot from OpenSky API
+
+├── streamlit_app.py      # Streamlit dashboard
+
+├── requirements.txt      # Python dependencies
+
+└── README.md             # Project documentation
 
 
 🚀 Usage
