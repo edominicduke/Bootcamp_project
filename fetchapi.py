@@ -5,6 +5,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 import os
 import time
+from dotenv import load_dotenv
 
 OPENSKY_URL = "https://opensky-network.org/api/states/all"
 OPENSKY_URL_DEPARTURES = "https://opensky-network.org/api/flights/departure"
@@ -86,6 +87,24 @@ def fetch_rdu_departures(hours=6) -> pd.DataFrame:
             "arrival": flight["estArrivalAirport"]
         })
     return pd.DataFrame(flights)
+
+def fetch_aviation_API_airlines_endpoint():
+    """
+    Fetches airline data from the AviationStack API airlines endpoint.
+    
+    Parameters:
+    - None
+    
+    Returns:
+    - dict: The JSON response from the AviationStack API containing the airline data.
+    """
+    #api_key = os.environ.get("AVIATION_KEY") # Retrieve the API key (when running on HuggingFace)
+    # Comment the line above and uncomment the two lines below if you are running the app locally (not on HuggingFace) and have a .env file with the AviationStack API key
+    load_dotenv()
+    api_key = os.getenv("AVIATION_KEY") # Retrieve the API key
+    url = f"https://api.aviationstack.com/v1/airlines?access_key={api_key}"
+    response = requests.get(url)
+    return response.json()
 
 
 if __name__ == "__main__":
