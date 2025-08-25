@@ -9,16 +9,23 @@ Scatter map of global flight positions.
 
 The work was split up by 5 people: Shreya Mendi, Omkar Sreekanth, Arnav Mahale, Hanfu Zhao, and Ethan Dominic. Each person's contributions are listed below:
 
+Shreya's Portion:
+
 Omkar's Portion:
 
-The following graphs were created by **Omkar Sreekanth (`oarkse7486`)** in the file `streamlit_app.py`:
+The following graphs were created by **Omkar Sreekanth (oarkse7486)** in the file streamlit_app.py:
 
 - Flights by altitude bands (bar chart, feet)  
 - Top airlines by callsign prefix (bar chart of top 15 airlines)  
 - Flights by broad region (pie chart: Americas, Europe/Africa, Asia-Pacific)  
 
-Note: Some earlier commits may appear under his old GitHub username **`sromee98403`**
-but all commits under both usernames were authored by **Omkar Sreekanth**.
+Note: Some earlier commits may appear under his old GitHub username **sromee98403** but the author is **Omkar Sreekanth** for all commits under both usernames.
+
+Arnav's Portion:
+
+Hanfu's Portion:
+
+Ethan's Portion:
 
 =======
 Top 10 Airlines departed from RDU in the last 6 hours
