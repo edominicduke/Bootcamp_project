@@ -10,15 +10,9 @@ import os
 import pandas as pd
 from test_json import return_json
 import matplotlib.pyplot as plt
+from fetchapi import fetch_aviation_API_airlines_endpoint
 
-"""
-load_dotenv()
-api_key = os.getenv("AVIATION_KEY")
-url = f"https://api.aviationstack.com/v1/airlines?access_key={api_key}"
-response = requests.get(url)
-airline_data = response.json()
-"""
-airline_data = return_json() # For testing
+airline_data = fetch_aviation_API_airlines_endpoint()
 
 def get_airline_feature_dict(feature_type, cast_type):
     """
