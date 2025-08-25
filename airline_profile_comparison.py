@@ -28,12 +28,13 @@ def get_airline_feature_dict(feature_type, cast_type):
     airline_feature_dict = {}
     for i in range(len(airline_data["data"])):
         airline_name = airline_data["data"][i]["airline_name"]
-        if cast_type == "int":
-            airline_feature_value = int(airline_data["data"][i][feature_type])
-        elif cast_type == "str":
-            airline_feature_value = str(airline_data["data"][i][feature_type])
-        else:
-            airline_feature_value = float(airline_data["data"][i][feature_type])
+        if airline_data["data"][i][feature_type] is not None and airline_data["data"][i][feature_type] != "":
+            if cast_type == "int":
+                airline_feature_value = int(airline_data["data"][i][feature_type])
+            elif cast_type == "str":
+                airline_feature_value = str(airline_data["data"][i][feature_type])
+            else:
+                airline_feature_value = float(airline_data["data"][i][feature_type])
         airline_feature_dict[airline_name] = airline_feature_value
     return airline_feature_dict
 
@@ -57,7 +58,7 @@ def plot_bar_graph(feature_series, title, ylabel, bottom_ylim=0):
     ax.set_ylabel(ylabel)
     ax.bar(feature_series.index, feature_series.values)
     ax.bar_label(bars, padding=3)
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=90)
     plt.ylim(bottom=bottom_ylim)
     st.pyplot(fig)
 
@@ -79,30 +80,33 @@ country_filter_option = st.radio(
 
 if country_filter_option == "All Countries":
     if comparison_option == "Fleet Size":
-        fleet_sizes = pd.Series(get_airline_feature_dict("fleet_size", "int"))
+        fleet_sizes = (pd.Series(get_airline_feature_dict("fleet_size", "int"))).dropna() # Remove airlines with no fleet size data
         sorted_fleet_sizes = fleet_sizes.sort_values(ascending=True)
-        plot_bar_graph(sorted_fleet_sizes, "Airline Fleet Sizes", "Fleet Size")
+        top10_sorted_fleet_sizes = sorted_fleet_sizes.tail(10) # Get the top 10 largest airlines by fleet size
+        plot_bar_graph(top10_sorted_fleet_sizes, "Airline Fleet Sizes", "Fleet Size")
     elif comparison_option == "Fleet Average Age":
-        fleet_avg_ages = pd.Series(get_airline_feature_dict("fleet_average_age", "float"))
+        fleet_avg_ages = (pd.Series(get_airline_feature_dict("fleet_average_age", "float"))).dropna() # Remove airlines with no fleet average age data
         sorted_fleet_avg_ages = fleet_avg_ages.sort_values(ascending=True)
-        plot_bar_graph(sorted_fleet_avg_ages, "Airline Fleet Average Ages", "Fleet Average Age")
+        top10_sorted_fleet_avg_ages = sorted_fleet_avg_ages.head(10) # Get the top 10 youngest airlines by fleet average age
+        plot_bar_graph(top10_sorted_fleet_avg_ages, "Airline Fleet Average Ages", "Fleet Average Age")
     elif comparison_option == "Founding Year":
-        founding_years = pd.Series(get_airline_feature_dict("date_founded", "int"))
+        founding_years = (pd.Series(get_airline_feature_dict("date_founded", "int"))).dropna() # Remove airlines with no founding year data
         sorted_founding_years = founding_years.sort_values(ascending=True)
-        plot_bar_graph(sorted_founding_years, "Airline Founding Years", "Founding Year", bottom_ylim=1900) # Set y-axis minimum so years before 1900 since no airlines were founded before then
+        top10_sorted_founding_years = sorted_founding_years.head(10) # Get the top 10 oldest airlines by founding year
+        plot_bar_graph(top10_sorted_founding_years, "Airline Founding Years", "Founding Year", bottom_ylim=1900) # Set y-axis minimum so years before 1900 since no airlines were founded before then
 else:
     if comparison_option == "Fleet Size":
-        fleet_sizes = pd.Series(get_airline_feature_dict("fleet_size", "int"))
+        fleet_sizes = (pd.Series(get_airline_feature_dict("fleet_size", "int"))).dropna() # Remove airlines with no fleet size data
         filtered_fleet_sizes = fleet_sizes[countries_of_origin == country_filter_option] # Ensure only airlines from the selected country are included
         sorted_fleet_sizes = filtered_fleet_sizes.sort_values(ascending=True)
         plot_bar_graph(sorted_fleet_sizes, "Airline Fleet Sizes", "Fleet Size")
     elif comparison_option == "Fleet Average Age":
-        fleet_avg_ages = pd.Series(get_airline_feature_dict("fleet_average_age", "float"))
+        fleet_avg_ages = (pd.Series(get_airline_feature_dict("fleet_average_age", "float"))).dropna() # Remove airlines with no fleet average age data
         filtered_fleet_avg_ages = fleet_avg_ages[countries_of_origin == country_filter_option] # Ensure only airlines from the selected country are included
         sorted_fleet_avg_ages = filtered_fleet_avg_ages.sort_values(ascending=True)
         plot_bar_graph(sorted_fleet_avg_ages, "Airline Fleet Average Ages", "Fleet Average Age")
     elif comparison_option == "Founding Year":
-        founding_years = pd.Series(get_airline_feature_dict("date_founded", "int"))
+        founding_years = (pd.Series(get_airline_feature_dict("date_founded", "int"))).dropna() # Remove airlines with no founding year data
         filtered_founding_years = founding_years[countries_of_origin == country_filter_option] # Ensure only airlines from the selected country are included
         sorted_founding_years = filtered_founding_years.sort_values(ascending=True)
         plot_bar_graph(sorted_founding_years, "Airline Founding Years", "Founding Year", bottom_ylim=1900) # Set y-axis minimum so years before 1900 since no airlines were founded before then
