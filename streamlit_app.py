@@ -8,6 +8,8 @@ import requests
 from dotenv import load_dotenv
 import os
 import pandas as pd
+from rdu_hourly import hourly_counts_for_previous_day, DEFAULT_AIRPORT
+
 
 st.set_page_config(page_title="Flight Volume by Country (OpenSky)", layout="wide")
 st.title("🌍 Global Flight Snapshot (via OpenSky Network)")
