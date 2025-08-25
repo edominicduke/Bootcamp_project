@@ -34,6 +34,7 @@ pip install -r requirements.txt
 📂 Project Structure
 
 .
+
 ├── fetchapi.py           # Fetches flight snapshot from OpenSky API
 
 ├── streamlit_app.py      # Streamlit dashboard
@@ -72,6 +73,16 @@ matplotlib
 The OpenSky free API is rate-limited (about 1 request every 10 seconds, max ~1,800 aircraft per snapshot).
 If no flights are shown, try again after a few seconds.
 Only live data is shown—no historical flight data is stored.
+
+🧠 Data Source
+
+All data comes from the public OpenSky API
+Snapshot is limited to ~1800 flights by the free tier
+
+🌐 Live Demo
+
+👉 View it on Hugging Face Spaces:
+🔗 https://huggingface.co/spaces/yourusername/opensky-flight-tracker
 
 🛠️ Example Output
 
