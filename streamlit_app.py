@@ -8,6 +8,10 @@ import requests
 from dotenv import load_dotenv
 import os
 import pandas as pd
+try:
+    from dotenv import load_dotenv
+except Exception:
+    load_dotenv = lambda *a, **k: None
 from rdu_hourly import hourly_counts_for_previous_day, DEFAULT_AIRPORT
 
 
