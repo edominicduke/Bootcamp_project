@@ -14,7 +14,8 @@ def fetch_opensky_snapshot() -> pd.DataFrame:
     """
     r = requests.get(OPENSKY_URL, timeout=20)
     if r.status_code != 200:
-        raise RuntimeError("Failed to fetch OpenSky data")
+        raise RuntimeError(f"Failed to fetch OpenSky data: {r.status_code} {r.reason} -> {r.text[:200]}")   
+
 
     data = r.json()
     states = data.get("states", [])
