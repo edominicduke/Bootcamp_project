@@ -57,11 +57,8 @@ def fetch_rdu_departures(hours=6) -> pd.DataFrame:
     ]
     data_df = pd.DataFrame(data, columns=columns)
 
-    # print(data_df)
-
     flights = []
     for _, flight in data_df.iterrows():
-        # print(flight)
         flights.append({
             "icao24": flight["icao24"],
             "callsign": flight["callsign"],

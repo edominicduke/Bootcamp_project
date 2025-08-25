@@ -76,6 +76,30 @@ if run_rdu:
         # ---- Top Destinations ----
         top_dest_10 = df_departures["arrival"].value_counts().head(10).reset_index()
         top_dest_10.columns = ["Destination Airport", "Flights"]
-
         st.subheader("📍 Top 10 Destinations from RDU (last 6h)")
         st.bar_chart(top_dest_10.set_index("Destination Airport"))
+
+        # ---- Top Airlines ----
+        def airline_from_callsign(callsign):
+            if not callsign or len(callsign) < 3:
+                return "Unknown"
+            prefix = callsign[:3].upper()
+            mapping = {
+                "AAL": "American Airlines",
+                "DAL": "Delta",
+                "UAL": "United",
+                "SWA": "Southwest",
+                "JBU": "JetBlue",
+                "FDX": "FedEx",
+                "UPS": "UPS",
+                "NKS": "Spirit",
+                "ASA": "Alaska",
+                "FFT": "Frontier"
+            }
+            return mapping.get(prefix, prefix)
+        
+        df_departures["Airline"] = df_departures["callsign"].apply(airline_from_callsign)
+        top_airlines = df_departures["Airline"].value_counts().head(10).reset_index()
+        top_airlines.columns = ["Airline", "Flights"]
+        st.subheader("🏢 Top 10 Airlines from RDU (last 6h)")
+        st.bar_chart(top_airlines.set_index("Airline"))
