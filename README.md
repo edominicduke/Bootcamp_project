@@ -1,4 +1,4 @@
-🌍 Global Flight Snapshot (via OpenSky Network)
+Global Flight Snapshot (via OpenSky Network)
 
 This project is a Streamlit dashboard that visualizes live aircraft data from the OpenSky Network API.
 It fetches a real-time snapshot of active flights (~1,800 aircraft globally) and displays:
@@ -10,14 +10,14 @@ Scatter map of global flight positions
 Top 10 Airlines departed from RDU in the last 6 hours
 >>>>>>> 754ce3af99ee183159a79d664cbb5a6814d977a0
 
-📦 Prerequisites
+Prerequisites
 
 Before running the app, make sure you have:
 Python 3.8+ installed
 Access to the internet (to fetch live OpenSky API data)
 pip package manager
 
-⚙️ Installation
+Installation
 
 Clone this repository or copy the source files:
 
@@ -40,7 +40,7 @@ Install the required dependencies:
 pip install -r requirements.txt
 
 
-📂 Project Structure
+Project Structure
 
 .
 
@@ -53,7 +53,7 @@ pip install -r requirements.txt
 └── README.md             # Project documentation
 
 
-🚀 Usage
+Usage
 
 Run locally
 
@@ -75,7 +75,7 @@ View:
 Bar Graph of Top 10 Airlines from RDU
 >>>>>>> 754ce3af99ee183159a79d664cbb5a6814d977a0
 
-📜 Requirements
+Requirements
 
 Here’s a sample requirements.txt you can use:
 requests
@@ -83,25 +83,39 @@ pandas
 streamlit
 matplotlib
 
-⚠️ Notes & Limitations
+Notes & Limitations
 
 The OpenSky free API is rate-limited (about 1 request every 10 seconds, max ~1,800 aircraft per snapshot).
 If no flights are shown, try again after a few seconds.
 Only live data is shown—no historical flight data is stored.
 
-🧠 Data Source
+Data Source
 
 All data comes from the public OpenSky API
 Snapshot is limited to ~1800 flights by the free tier
 
-🌐 Live Demo
+Live Demo
 
-👉 View it on Hugging Face Spaces:
-🔗 https://huggingface.co/spaces/ShreyaMendi/Skyline 
+View it on Hugging Face Spaces:
+https://huggingface.co/spaces/ShreyaMendi/Skyline 
 
-🛠️ Example Output
+Example Output
 
 Top 30 Countries by Active Flights
 A horizontal bar chart ranking countries with the most flights in the snapshot.
 Global Flight Positions (Scatter Map)
 A scatter plot of aircraft positions by latitude/longitude.
+
+
+---
+
+Omkar's Code (Additional Analyses)
+
+The following analyses were implemented by **Omkar Sreekanth (`oarkse7486`)** in `streamlit_app.py`:
+
+- Flights by altitude bands (bar chart, feet)  
+- Top airlines by callsign prefix (bar chart of top 15 airlines)  
+- Flights by broad region (pie chart: Americas, Europe/Africa, Asia-Pacific)  
+
+Note: Some earlier commits may appear under his old GitHub username **`sromee98403`**,  
+but all commits under both usernames were authored by **Omkar Sreekanth**.
