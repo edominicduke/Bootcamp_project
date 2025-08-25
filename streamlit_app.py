@@ -3,7 +3,7 @@
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-from fetchapi import fetch_opensky_snapshot
+from fetchapi import fetch_opensky_snapshot, fetch_rdu_departures
 
 st.set_page_config(page_title="Flight Volume by Country (OpenSky)", layout="wide")
 st.title("🌍 Global Flight Snapshot (via OpenSky Network)")
@@ -58,6 +58,24 @@ if run:
 
     with st.expander("Raw Country Data"):
         st.dataframe(summary)
-
 else:
     st.info("Click 'Fetch Live Flights' to view global snapshot.")
+
+
+## ---------- RDU Specific Analysis ---------- ##
+st.header("🛫 Raleigh-Durham (RDU) Airport Stats")
+run_rdu = st.button("Fetch RDU Stats")
+
+if run_rdu:
+    with st.spinner("Fetching RDU-specific flight data..."):
+        df_departures = fetch_rdu_departures(hours=6)
+    
+    st.metric("Departures (last 6h)", len(df_departures))
+
+    if not df_departures.empty:
+        # ---- Top Destinations ----
+        top_dest_10 = df_departures["arrival"].value_counts().head(10).reset_index()
+        top_dest_10.columns = ["Destination Airport", "Flights"]
+
+        st.subheader("📍 Top 10 Destinations from RDU (last 6h)")
+        st.bar_chart(top_dest_10.set_index("Destination Airport"))
