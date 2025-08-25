@@ -2,9 +2,10 @@
 import requests
 import pandas as pd
 from datetime import datetime
-import time
 from dotenv import load_dotenv
 import os
+import time
+from dotenv import load_dotenv
 
 OPENSKY_URL = "https://opensky-network.org/api/states/all"
 OPENSKY_URL_DEPARTURES = "https://opensky-network.org/api/flights/departure"
@@ -16,7 +17,8 @@ def fetch_opensky_snapshot() -> pd.DataFrame:
     """
     r = requests.get(OPENSKY_URL, timeout=20)
     if r.status_code != 200:
-        raise RuntimeError("Failed to fetch OpenSky data")
+        raise RuntimeError(f"Failed to fetch OpenSky data: {r.status_code} {r.reason} -> {r.text[:200]}")   
+
 
     data = r.json()
     states = data.get("states", [])
@@ -32,6 +34,24 @@ def fetch_opensky_snapshot() -> pd.DataFrame:
     df["last_contact"] = pd.to_datetime(df["last_contact"], unit="s")
     df.attrs["timestamp"] = datetime.utcfromtimestamp(timestamp)
     return df
+
+def fetch_aviation_API_airlines_endpoint():
+    """
+    Fetches airline data from the AviationStack API airlines endpoint.
+    
+    Parameters:
+    - None
+    
+    Returns:
+    - dict: The JSON response from the AviationStack API containing the airline data.
+    """
+    #api_key = os.environ.get("AVIATION_KEY") # Retrieve the API key (when running on HuggingFace)
+    # Comment the line above and uncomment the two lines below if you are running the app locally (not on HuggingFace) and have a .env file with the AviationStack API key
+    load_dotenv()
+    api_key = os.getenv("AVIATION_KEY") # Retrieve the API key
+    url = f"https://api.aviationstack.com/v1/airlines?access_key={api_key}"
+    response = requests.get(url)
+    return response.json()
 
 def fetch_rdu_departures(hours=6) -> pd.DataFrame:
     """
@@ -85,6 +105,7 @@ def fetch_aviation_API_airlines_endpoint():
     url = f"https://api.aviationstack.com/v1/airlines?access_key={api_key}"
     response = requests.get(url)
     return response.json()
+
 
 if __name__ == "__main__":
     print("Fetching live flight data from OpenSky…")
