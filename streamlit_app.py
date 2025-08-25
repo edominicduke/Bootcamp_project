@@ -13,6 +13,7 @@ try:
 except Exception:
     load_dotenv = lambda *a, **k: None
 from rdu_hourly import hourly_counts_for_previous_day, DEFAULT_AIRPORT
+load_dotenv()
 
 
 st.set_page_config(page_title="Flight Volume by Country (OpenSky)", layout="wide")
