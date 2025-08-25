@@ -3,7 +3,7 @@
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-from fetchapi import fetch_opensky_snapshot
+from fetchapi import fetch_opensky_snapshot, fetch_rdu_departures
 
 st.set_page_config(page_title="Flight Volume by Country (OpenSky)", layout="wide")
 st.title("🌍 Global Flight Snapshot (via OpenSky Network)")
@@ -58,7 +58,6 @@ if run:
 
     with st.expander("Raw Country Data"):
         st.dataframe(summary)
-
 
 
     ############# Omkar's Code #############
@@ -153,7 +152,46 @@ if run:
 
 
 
+=======
+
 else:
     st.info("Click 'Fetch Live Flights' to view global snapshot.")
 
+
+
+## ---------- RDU Specific Analysis ---------- ##
+st.header("🛫 Raleigh-Durham (RDU) Airport Stats")
+run_rdu = st.button("Fetch RDU Stats")
+
+if run_rdu:
+    with st.spinner("Fetching RDU-specific flight data..."):
+        df_departures = fetch_rdu_departures(hours=6)
+    
+    st.metric("Departures (last 6h)", len(df_departures))
+
+    if not df_departures.empty:
+        # ---- Top Airlines ----
+        def airline_from_callsign(callsign):
+            if not callsign or len(callsign) < 3:
+                return "Unknown"
+            prefix = callsign[:3].upper()
+            mapping = {
+                "AAL": "American Airlines",
+                "DAL": "Delta",
+                "UAL": "United",
+                "SWA": "Southwest",
+                "JBU": "JetBlue",
+                "FDX": "FedEx",
+                "UPS": "UPS",
+                "NKS": "Spirit",
+                "ASA": "Alaska",
+                "FFT": "Frontier"
+            }
+            return mapping.get(prefix, prefix)
+        
+        df_departures["Airline"] = df_departures["callsign"].apply(airline_from_callsign)
+        top_airlines = df_departures["Airline"].value_counts().head(10).reset_index()
+        top_airlines.columns = ["Airline", "Flights"]
+        st.subheader("🏢 Top 10 Airlines from RDU (last 6h)")
+        st.bar_chart(top_airlines.set_index("Airline"))
 
