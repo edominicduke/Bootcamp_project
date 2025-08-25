@@ -82,7 +82,7 @@ Snapshot is limited to ~1800 flights by the free tier
 🌐 Live Demo
 
 👉 View it on Hugging Face Spaces:
-🔗 https://huggingface.co/spaces/yourusername/opensky-flight-tracker
+🔗 https://huggingface.co/spaces/ShreyaMendi/Skyline 
 
 🛠️ Example Output
 
