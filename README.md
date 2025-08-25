@@ -16,17 +16,23 @@ pip package manager
 ⚙️ Installation
 
 Clone this repository or copy the source files:
+
 git clone https://github.com/yourusername/opensky-flight-dashboard.git
 cd opensky-flight-dashboard
+
 (Optional but recommended) Create a virtual environment:
+
 python -m venv venv
 source venv/bin/activate   # On Mac/Linux
 venv\Scripts\activate      # On Windows
+
 Install the required dependencies:
+
 pip install -r requirements.txt
 
 
 📂 Project Structure
+
 .
 ├── fetchapi.py          # Fetches flight snapshot from OpenSky API
 ├── streamlit_app.py     # Streamlit dashboard
@@ -37,9 +43,11 @@ pip install -r requirements.txt
 🚀 Usage
 
 Run locally
+
 Start the Streamlit app:
 streamlit run streamlit_app.py
 This will open a browser window at http://localhost:8501.
+
 Example Workflow
 Click "Fetch Live Flights"
 View:
