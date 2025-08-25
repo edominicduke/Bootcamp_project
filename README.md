@@ -1,11 +1,25 @@
-Global Flight Snapshot (via OpenSky Network)
+Global Flight Snapshot via OpenSky Network:
 
-This project is a Streamlit dashboard that visualizes live aircraft data from the OpenSky Network API.
+This project is a Streamlit dashboard that visualizes live aircraft data from the OpenSky Network API. 
 It fetches a real-time snapshot of active flights (~1,800 aircraft globally) and displays:
+
 Number of active flights
 Top 30 countries by active flights (bar chart)
-Scatter map of global flight positions
-<<<<<<< HEAD
+Scatter map of global flight positions.
+
+The work was split up by 5 people: Shreya Mendi, Omkar Sreekanth, Arnav Mahale, Hanfu Zhao, and Ethan Dominic. Each person's contributions are listed below:
+
+Omkar's Portion:
+
+The following graphs were created by **Omkar Sreekanth (`oarkse7486`)** in the file `streamlit_app.py`:
+
+- Flights by altitude bands (bar chart, feet)  
+- Top airlines by callsign prefix (bar chart of top 15 airlines)  
+- Flights by broad region (pie chart: Americas, Europe/Africa, Asia-Pacific)  
+
+Note: Some earlier commits may appear under his old GitHub username **`sromee98403`**
+but all commits under both usernames were authored by **Omkar Sreekanth**.
+
 =======
 Top 10 Airlines departed from RDU in the last 6 hours
 >>>>>>> 754ce3af99ee183159a79d664cbb5a6814d977a0
@@ -106,16 +120,4 @@ A horizontal bar chart ranking countries with the most flights in the snapshot.
 Global Flight Positions (Scatter Map)
 A scatter plot of aircraft positions by latitude/longitude.
 
-
----
-
-Omkar's Code (Additional Analyses)
-
-The following analyses were implemented by **Omkar Sreekanth (`oarkse7486`)** in `streamlit_app.py`:
-
-- Flights by altitude bands (bar chart, feet)  
-- Top airlines by callsign prefix (bar chart of top 15 airlines)  
-- Flights by broad region (pie chart: Americas, Europe/Africa, Asia-Pacific)  
-
-Note: Some earlier commits may appear under his old GitHub username **`sromee98403`**,  
-but all commits under both usernames were authored by **Omkar Sreekanth**.
+=======
