@@ -2,8 +2,10 @@
 import requests
 import pandas as pd
 from datetime import datetime
+import time
 
 OPENSKY_URL = "https://opensky-network.org/api/states/all"
+OPENSKY_URL_DEPARTURES = "https://opensky-network.org/api/flights/departure"
 
 def fetch_opensky_snapshot() -> pd.DataFrame:
     """
@@ -29,10 +31,49 @@ def fetch_opensky_snapshot() -> pd.DataFrame:
     df.attrs["timestamp"] = datetime.utcfromtimestamp(timestamp)
     return df
 
+def fetch_rdu_departures(hours=6) -> pd.DataFrame:
+    """
+    Fetch recent departures from RDU (KRDU) within the last n hours (default is 6).
+    Returns a pandas DataFrame.
+    """
+    end = int(time.time())
+    begin = end - hours * 3600
+    params = {
+        "airport": "KRDU",
+        "begin": begin,
+        "end": end
+    }
+
+    response = requests.get(OPENSKY_URL_DEPARTURES, params=params, timeout=20)
+    if response.status_code != 200:
+        raise RuntimeError(f"Failed to fetch data, {response.headers}")
+    
+    data = response.json()
+    columns = [
+        "icao24", "firstSeen", "estDepartureAirport", "lastSeen", "estArrivalAirport", "callsign",
+        "estDepartureAirportHorizDistance", "estDepartureAirportVertDistance", "estArrivalAirportHorizDistance",
+        "estArrivalAirportVertDistance", "departureAirportCandidatesCount", "arrivalAirportCandidatesCount"
+    ]
+    data_df = pd.DataFrame(data, columns=columns)
+
+    flights = []
+    for _, flight in data_df.iterrows():
+        flights.append({
+            "icao24": flight["icao24"],
+            "callsign": flight["callsign"],
+            "departure": flight["estDepartureAirport"],
+            "arrival": flight["estArrivalAirport"]
+        })
+    return pd.DataFrame(flights)
+
 if __name__ == "__main__":
     print("Fetching live flight data from OpenSky…")
     try:
         df = fetch_opensky_snapshot()
+        print(f"Fetched {len(df)} flights at {df.attrs['timestamp']}")
+        print(df.head())
+
+        df_2 = fetch_rdu_departures(hours=6)
         print(f"Fetched {len(df)} flights at {df.attrs['timestamp']}")
         print(df.head())
     except Exception as e:
