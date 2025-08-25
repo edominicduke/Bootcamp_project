@@ -73,12 +73,6 @@ if run_rdu:
     st.metric("Departures (last 6h)", len(df_departures))
 
     if not df_departures.empty:
-        # ---- Top Destinations ----
-        top_dest_10 = df_departures["arrival"].value_counts().head(10).reset_index()
-        top_dest_10.columns = ["Destination Airport", "Flights"]
-        st.subheader("📍 Top 10 Destinations from RDU (last 6h)")
-        st.bar_chart(top_dest_10.set_index("Destination Airport"))
-
         # ---- Top Airlines ----
         def airline_from_callsign(callsign):
             if not callsign or len(callsign) < 3:

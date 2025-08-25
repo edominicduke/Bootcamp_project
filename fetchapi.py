@@ -6,7 +6,6 @@ import time
 
 OPENSKY_URL = "https://opensky-network.org/api/states/all"
 OPENSKY_URL_DEPARTURES = "https://opensky-network.org/api/flights/departure"
-OPENSKY_URL_ARRIVALS = "https://opensky-network.org/api/flights/arrival"
 
 def fetch_opensky_snapshot() -> pd.DataFrame:
     """
