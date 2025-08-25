@@ -152,8 +152,6 @@ if run:
 
 
 
-=======
-
 else:
     st.info("Click 'Fetch Live Flights' to view global snapshot.")
 
