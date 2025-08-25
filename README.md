@@ -5,6 +5,7 @@ It fetches a real-time snapshot of active flights (~1,800 aircraft globally) and
 Number of active flights
 Top 30 countries by active flights (bar chart)
 Scatter map of global flight positions
+Top 10 Airlines departed from RDU in the last 6 hours
 
 📦 Prerequisites
 
@@ -17,8 +18,8 @@ pip package manager
 
 Clone this repository or copy the source files:
 
-git clone https://github.com/yourusername/opensky-flight-dashboard.git
-cd opensky-flight-dashboard
+git clone https://github.com/Shreya-Mendi/Bootcamp_project.git
+cd Bootcamp_project/
 
 (Optional but recommended) Create a virtual environment:
 
@@ -58,7 +59,9 @@ View:
 Total number of flights in the snapshot
 Top 30 countries by active flights (bar chart)
 Global scatter map of flight positions
-
+Click "Fetch RDU Data"
+View:
+Bar Graph of Top 10 Airlines from RDU
 
 📜 Requirements
 
