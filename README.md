@@ -19,7 +19,7 @@ pip package manager
 Clone this repository or copy the source files:
 
 git clone https://github.com/Shreya-Mendi/Bootcamp_project.git
-cd opensky-flight-dashboard
+cd Bootcamp_project/
 
 (Optional but recommended) Create a virtual environment:
 
