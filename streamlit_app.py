@@ -65,11 +65,12 @@ if run:
 
 
     ############# Omkar's Code #############
-    st.subheader("📊 Other Analyses (OpenSky)")
+    st.header("📊 Other Analyses (OpenSky)")
 
     col1, col2, col3 = st.columns(3)
 
     # 1. Flights by Altitude Band
+    st.subheader("Flights by Altitude Band")
     with col1:
         if "baro_altitude" in df.columns:
             # Convert meters to feet
@@ -90,6 +91,7 @@ if run:
 
 
     # 2. Top Airlines by Callsign Prefix
+    st.subheader("Top Airlines by Callsign Prefix")
     with col2:
         if "callsign" in df.columns:
             # Clean callsigns
@@ -140,6 +142,7 @@ if run:
 
 
     # 3. Flights by Broad Region (Pie)
+    st.subheader("Flights by Broad Region")
     with col3:
         if {"latitude","longitude"}.issubset(df.columns):
             df["region"] = pd.cut(
