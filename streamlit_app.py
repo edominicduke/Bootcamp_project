@@ -334,6 +334,13 @@ if go_heatmap:
 
 #### ----------- Airline Profile Comparison (AviationAPI - Ethan Dominic's Code) ----------- ####
 airline_data = fetch_aviation_API_airlines_endpoint()
+# Guard: skip section if payload does not have a non-empty "data" list
+if not (isinstance(airline_data, dict) and isinstance(airline_data.get("data"), list) and airline_data["data"]):
+    st.info("Airline dataset is unavailable right now. Skipping the comparison section.")
+else:
+    # ↓ 把『从 countries_of_origin = ... 一直到最后 plot 的整段』缩进到这个 else 里
+    # countries_of_origin = pd.Series(get_airline_feature_dict("country_name", "str"))
+    # ...
 if isinstance(airline_data, list):
     airline_data = {"data": airline_data}
 elif isinstance(airline_data, dict):
