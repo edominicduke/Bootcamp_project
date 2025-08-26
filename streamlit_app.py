@@ -14,6 +14,27 @@ except Exception:
     load_dotenv = lambda *a, **k: None
 from rdu_hourly import hourly_counts_for_previous_day, DEFAULT_AIRPORT
 load_dotenv()
+
+import os
+
+def _debug_env_ascii_ok():
+    u = os.getenv("OPENSKY_USER", "")
+    p = os.getenv("OPENSKY_PASS", "")
+    # Show safely without revealing actual secrets
+    st.write({
+        "has_user": bool(u),
+        "has_pass": bool(p),
+        "user_repr": repr(u[:3] + "***"),  # mask
+        "pass_len": len(p)
+    })
+    # Check latin-1 encodability
+    try:
+        u.encode("latin-1"); p.encode("latin-1")
+        st.write({"latin1_ok": True})
+    except UnicodeEncodeError:
+        st.error("OPENSKY_USER / OPENSKY_PASS contain non-Latin-1 characters. Please use ASCII only.")
+
+_debug_env_ascii_ok()
 # --- Compatibility wrapper: DO NOT modify teammate's code below ---
 # This replaces the imported function with a safe wrapper that always returns {"data": list}
 try:
