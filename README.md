@@ -26,6 +26,9 @@ Arnav's Portion:
 Hanfu's Portion:
 
 Ethan's Portion:
+I primarily worked on the Airline Profile Comparison feature of the app, which provides profile comparisons (in bar graph format) of various airlines based on data fetched from the AviationStack API. The user can choose the type of comparison
+to make between the airlines (fleet size, fleet average age, and founding year) and can also filter the airlines being compared based on their countries of origin if desired.
+
 
 =======
 Top 10 Airlines departed from RDU in the last 6 hours
@@ -96,6 +99,20 @@ Click "Fetch RDU Data"
 View:
 Bar Graph of Top 10 Airlines from RDU
 >>>>>>> 754ce3af99ee183159a79d664cbb5a6814d977a0
+
+Scroll Down To "Airline Profile Comparison"
+
+Pick the type of comparison you would like to see: 
+
+Fleet size
+
+Fleet average age
+
+Founding year
+
+Pick a country of origin to filter by:
+
+Different Country Options (Choose "All Countries" if you do not want a filter based on country of origin)
 
 Requirements
 

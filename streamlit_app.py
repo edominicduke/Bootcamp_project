@@ -332,7 +332,7 @@ if go_heatmap:
 
 
 
-#### ----------- Airline Profile Comparison (AviationAPI - Ethan Dominic's Code) ----------- ####
+#### ----------- Airline Profile Comparison (AviationStack API - Ethan Dominic's Code) ----------- ####
 airline_data = fetch_aviation_API_airlines_endpoint()
 if isinstance(airline_data, list):
     airline_data = {"data": airline_data}
