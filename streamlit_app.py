@@ -75,6 +75,12 @@ if _orig_fetch_airlines is not None:
             return {"data": payload}
         # Anything else → empty dataset
         return {"data": []}
+        
+from rdu_hourly import hourly_counts_for_previous_day, DEFAULT_AIRPORT
+load_dotenv(override=True)
+@st.cache_data(ttl=600)
+def _get_counts_cached(icao: str):
+    return hourly_counts_for_previous_day(icao.strip().upper())
 
 st.set_page_config(page_title="Flight Volume by Country (OpenSky)", layout="wide")
 st.title("🌍 Global Flight Snapshot (via OpenSky Network)")
@@ -278,8 +284,7 @@ with colB:
 
 if go_heatmap:
     with st.spinner("Fetching previous-day arrivals & departures from OpenSky..."):
-        # Returns a 24x2 table (arrivals/departures per hour) and the previous local date
-        counts_df, prev_day = hourly_counts_for_previous_day(airport_icao.strip().upper())
+    counts_df, prev_day = _get_counts_cached(airport_icao)
 
     # Show the day and timezone for clarity
     st.caption(f"Local day: {prev_day.isoformat()} · Timezone: America/New_York")
