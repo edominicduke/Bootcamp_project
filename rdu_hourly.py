@@ -10,6 +10,11 @@ from __future__ import annotations
 import os
 import time
 from collections import Counter
+_LAST_STATUS_HIST = Counter()
+
+def get_last_status_hist() -> dict:
+    """Expose last run's status histogram to the app."""
+    return dict(_LAST_STATUS_HIST)
 from typing import List, Tuple, Optional, Dict, Any
 
 import requests
@@ -94,7 +99,7 @@ def _fetch_flights(
     airport: str,
     begin_ts: int,
     end_ts: int,
-    window_sec: int = 6 * 3600,
+    window_sec: int = 2 * 3600,
     sleep_between: float = 1.0,
 ) -> List[Dict[str, Any]]:
     """
@@ -171,6 +176,8 @@ def _fetch_flights(
         _st_info(f"OpenSky replies by status: {hist}. {' '.join(hints)}")
 
     return uniq
+    global _LAST_STATUS_HIST
+_LAST_STATUS_HIST = Counter(statuses)
 
 
 def _rows_to_df(rows: List[Dict[str, Any]], kind: str) -> pd.DataFrame:
