@@ -14,7 +14,9 @@ except Exception:
     load_dotenv = lambda *a, **k: None
 from rdu_hourly import hourly_counts_for_previous_day, DEFAULT_AIRPORT
 load_dotenv(override=True)
-
+@st.cache_data(ttl=600)
+def _get_counts_cached(icao: str):
+    return hourly_counts_for_previous_day(icao.strip().upper())
 import os
 
 def _debug_env_ascii_ok():
@@ -273,7 +275,9 @@ if run_rdu:
 # ============== >>> RDU HOURLY HEATMAP START >>> ==============
 # ---------- RDU Previous-Day Hourly Heatmap (OpenSky) ----------
 st.header("🔥 RDU Hourly Arrivals/Departures — Previous Day")
-
+if st.button("♻️ Clear RDU cache"):
+    st.cache_data.clear()
+    st.success("Cache cleared.")
 colA, colB = st.columns([1, 1])
 with colA:
     # ICAO code; KRDU is Raleigh–Durham
