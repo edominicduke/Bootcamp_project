@@ -365,7 +365,10 @@ comparison_option = st.radio(
     "Pick the type of comparison you would like to see: ",
     ("Fleet Size", "Fleet Average Age", "Founding Year")
 )
-
+# --- Final guard: ensure airline_data has a "data" list right before use ---
+if not isinstance(airline_data, dict):
+    airline_data = {}
+airline_data.setdefault("data", [])
 countries_of_origin = pd.Series(get_airline_feature_dict("country_name", "str"))
 country_filters = countries_of_origin.unique().tolist()
 country_filters.append("All Countries") # Add option for user to see all countries
