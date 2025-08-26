@@ -14,7 +14,46 @@ except Exception:
     load_dotenv = lambda *a, **k: None
 from rdu_hourly import hourly_counts_for_previous_day, DEFAULT_AIRPORT
 load_dotenv()
+# --- Compatibility wrapper: DO NOT modify teammate's code below ---
+# This replaces the imported function with a safe wrapper that always returns {"data": list}
+try:
+    _orig_fetch_airlines = fetch_aviation_API_airlines_endpoint  # imported from fetchapi.py
+except Exception:
+    _orig_fetch_airlines = None
 
+if _orig_fetch_airlines is not None:
+    def fetch_aviation_API_airlines_endpoint(*args, **kwargs):
+        """
+        Safe wrapper around the original function.
+        Always normalizes the payload to {"data": <list>}.
+        Never raises if the upstream returns an unexpected shape.
+        """
+        try:
+            payload = _orig_fetch_airlines(*args, **kwargs)
+        except Exception as e:
+            # Soft-fail: surface info to the UI but keep the app running
+            try:
+                import streamlit as st  # guard: in case this module is imported elsewhere
+                st.info(f"Aviation API error: {type(e).__name__}: {e}")
+            except Exception:
+                pass
+            return {"data": []}
+
+        # Normalize common shapes → {"data": list}
+        if isinstance(payload, dict):
+            if isinstance(payload.get("data"), list):
+                return payload
+            for alt in ("results", "airlines", "items"):
+                if isinstance(payload.get(alt), list):
+                    return {"data": payload[alt]}
+            # If it's a dict-of-dicts, convert values to a list
+            if payload and all(isinstance(v, dict) for v in payload.values()):
+                return {"data": list(payload.values())}
+            return {"data": []}
+        if isinstance(payload, list):
+            return {"data": payload}
+        # Anything else → empty dataset
+        return {"data": []}
 
 st.set_page_config(page_title="Flight Volume by Country (OpenSky)", layout="wide")
 st.title("🌍 Global Flight Snapshot (via OpenSky Network)")
