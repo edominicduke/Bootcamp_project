@@ -3,7 +3,7 @@
 # and aggregate counts per local hour using the OpenSky REST API.
 #
 # Key features:
-# - 1-hour windows (<= 2h limit for flights/arrival|departure endpoints)
+# - 1-hour windows (within flights/arrival|departure endpoint limits)
 # - Basic Auth if OPENSKY_USER/OPENSKY_PASS are present (ASCII/Latin-1 only)
 # - Gentle pacing + backoff on 429/5xx, no spin on 401/403/404
 # - Status histogram exposed for on-page diagnostics
@@ -88,7 +88,7 @@ def _opensky_auth() -> Optional[Tuple[str, str]]:
         _st_error(
             "OPENSKY_USER/OPENSKY_PASS must be ASCII/Latin-1. "
             "Recreate your .env with plain ASCII. "
-            "Tip: load_dotenv(override=True) and unset shell leftovers."
+            "Tip: use load_dotenv(override=True) and unset shell leftovers before running."
         )
         return None
 
@@ -119,7 +119,7 @@ def _fetch_flights(
     airport: str,
     begin_ts: int,
     end_ts: int,
-    window_sec: int = 1 * 3600,   # 1-hour windows (<= 2h limit)
+    window_sec: int = 1 * 3600,   # 1-hour windows (≤ 2h limit)
     sleep_between: float = 2.0,   # base pacing between windows (when authed)
 ) -> List[Dict[str, Any]]:
     """
@@ -264,6 +264,10 @@ def hourly_counts_for_previous_day(airport: str = DEFAULT_AIRPORT) -> Tuple[pd.D
     dep_cnt = (dep_df.groupby("hour").size() if not dep_df.empty else pd.Series(dtype="int64")).reindex(idx, fill_value=0)
 
     out = pd.DataFrame({"arrivals": arr_cnt.astype(int), "departures": dep_cnt.astype(int)})
+
+    # Return local calendar date without tz (e.g., 2025-08-24)
+    return out, prev_day_local.tz_localize(None)
+
 
     # Return local calendar date without tz (e.g., 2025-08-24)
     return out, prev_day_local.tz_localize(None)
