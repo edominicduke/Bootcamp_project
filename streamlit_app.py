@@ -292,6 +292,13 @@ if go_heatmap:
     # Display the raw hourly table
     st.dataframe(counts_df, use_container_width=True)
 
+    from rdu_hourly import get_last_status_hist
+st.write({
+    "total_arrivals": int(counts_df['arrivals'].sum()),
+    "total_departures": int(counts_df['departures'].sum()),
+    "opensky_status_hist": get_last_status_hist()  # 例如 {200: 6, 429: 2} / {401: 4}
+})
+
     # Build a 2x24 matrix for heatmap: row0=Arrivals, row1=Departures
     data = [counts_df['arrivals'].tolist(), counts_df['departures'].tolist()]
 
