@@ -10,6 +10,44 @@ from typing import Dict, List, Tuple, Optional
 import requests
 import pandas as pd
 
+# --- OAuth2 client-credentials (OpenSky API Client) ---
+TOKEN_URL = os.getenv(
+    "OPENSKY_TOKEN_URL",
+    "https://auth.opensky-network.org/realms/opensky-network/protocol/openid-connect/token",
+)
+_token_cache = {"access_token": None, "exp": 0.0}
+
+def _get_bearer_token():
+    """Return a cached OAuth2 bearer token if OPENSKY_CLIENT_ID/SECRET are set; else None."""
+    cid = os.getenv("OPENSKY_CLIENT_ID")
+    cs  = os.getenv("OPENSKY_CLIENT_SECRET")
+    if not cid or not cs:
+        return None
+    # valid cache?
+    now = time.time()
+    if _token_cache["access_token"] and now < _token_cache["exp"] - 60:
+        return _token_cache["access_token"]
+    # fetch new token
+    try:
+        resp = requests.post(
+            TOKEN_URL,
+            data={"grant_type": "client_credentials", "client_id": cid, "client_secret": cs},
+            timeout=30,
+        )
+        _bump_status(resp.status_code)
+        if resp.status_code != 200:
+            return None
+        j = resp.json() or {}
+        tok = j.get("access_token")
+        if tok:
+            _token_cache["access_token"] = tok
+            _token_cache["exp"] = now + float(j.get("expires_in", 3600))
+            return tok
+    except requests.RequestException:
+        return None
+    return None
+
+
 # -----------------------------
 # Config & constants
 # -----------------------------
@@ -100,9 +138,15 @@ def _maybe_auth() -> Optional[Tuple[str, str]]:
     return (u, p)
 
 def _do_get(url: str, params: Dict, auth: Optional[Tuple[str, str]], timeout: int = 30) -> requests.Response:
-    r = requests.get(url, params=params, auth=auth, timeout=timeout)
+    headers = {}
+    bearer = _get_bearer_token()
+    if bearer:
+        headers["Authorization"] = f"Bearer {bearer}"
+        auth = None  # use OAuth2 instead of Basic
+    r = requests.get(url, params=params, auth=auth, headers=headers, timeout=timeout)
     _bump_status(r.status_code)
     return r
+
 
 
 # -----------------------------
