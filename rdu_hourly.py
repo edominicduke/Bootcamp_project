@@ -4,7 +4,14 @@ import os
 import time
 import requests
 import pandas as pd
+# put this near the top of rdu_hourly.py
+try:
+    from dotenv import load_dotenv
+except Exception:
+    def load_dotenv(*a, **k): pass
 
+from pathlib import Path
+load_dotenv(dotenv_path=Path(__file__).with_name(".env"), override=True)
 # Minimal constants (like fetchapi.py)
 OPENSKY_URL_ARR = "https://opensky-network.org/api/flights/arrival"
 OPENSKY_URL_DEP = "https://opensky-network.org/api/flights/departure"
