@@ -295,6 +295,20 @@ if go_heatmap:
 
 #### ----------- Airline Profile Comparison (AviationAPI - Ethan Dominic's Code) ----------- ####
 airline_data = fetch_aviation_API_airlines_endpoint()
+if isinstance(airline_data, list):
+    airline_data = {"data": airline_data}
+elif isinstance(airline_data, dict):
+    if not isinstance(airline_data.get("data"), list):
+        # Try common alternate keys from APIs
+        for alt in ("results", "airlines", "items"):
+            if isinstance(airline_data.get(alt), list):
+                airline_data = {"data": airline_data[alt]}
+                break
+        else:
+            # Fallback: empty dataset if no suitable list found
+            airline_data = {"data": []}
+else:
+    airline_data = {"data": []}
 
 def get_airline_feature_dict(feature_type, cast_type):
     """
