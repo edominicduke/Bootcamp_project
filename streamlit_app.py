@@ -8,12 +8,15 @@ import requests
 
 import os
 
+# always read the .env next to this file
 try:
     from dotenv import load_dotenv
 except Exception:
-    load_dotenv = lambda *a, **k: None
-from rdu_hourly import hourly_counts_for_previous_day, DEFAULT_AIRPORT, get_last_status_hist
-load_dotenv(override=True)
+    def load_dotenv(*a, **k): pass
+
+from pathlib import Path
+load_dotenv(dotenv_path=Path(__file__).with_name(".env"), override=True)
+
 @st.cache_data(ttl=600)
 def _get_counts_cached(icao: str):
     return hourly_counts_for_previous_day(icao.strip().upper())
